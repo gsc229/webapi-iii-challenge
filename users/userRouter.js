@@ -1,4 +1,4 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -11,7 +11,8 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-
+  res.status(200).json({ message: "USER .get '/' " })
+  console.log('userRouter .get /')
 });
 
 router.get('/:id', (req, res) => {
