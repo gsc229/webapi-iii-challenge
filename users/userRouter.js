@@ -2,8 +2,11 @@ const express = require('express');
 const Users = require('../users/userDb');
 const router = express.Router();
 
-router.post('/', (req, res) => {
-
+router.post('/', validateUser, (req, res) => {
+  Users.insert(req.body)
+    .then(newUser => {
+      res.status(200).json(newUser);
+    })
 });
 
 router.post('/:id/posts', validateUserId, (req, res) => {
@@ -23,12 +26,9 @@ router.get('/', (req, res) => {
 router.get('/:id', validateUserId, (req, res) => {
   res.status(200).json(req.user);
   console.log(req.user);
-
-
-
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', validateUser, (req, res) => {
 
 });
 
@@ -69,7 +69,15 @@ function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
-  console.log("YOU MADE IT TO USER VALIDATOR!");
+
+  if (!req.body) {
+    return res.status(400).json({ message: "Your request needs a body." })
+  }
+  if (!req.body.name) {
+    return res.status(400).json({ message: "Your request is missing a name: 'name'" });
+  }
+  next();
+  console.log("validateUser req.body", req.body);
 
 };
 
