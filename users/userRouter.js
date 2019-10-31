@@ -32,16 +32,26 @@ router.get('/:id', validateUserId, (req, res) => {
   console.log(req.user);
 });
 
-router.get('/:id/posts', validateUser, (req, res) => {
-
+router.get('/:id/posts', validateUserId, (req, res) => {
+  Users.getUserPosts(req.user.id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
 });
 
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', validateUserId, (req, res) => {
+  Users.remove(req.user.id)
+    .then(respone => {
+      res.status(200).json(respone);
+    })
 });
 
-router.put('/:id', (req, res) => {
-
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+  console.log("req.user", req.user);
+  Users.update(req.user.id, req.body)
+    .then(changes => {
+      res.status(200).json(changes);
+    })
 });
 
 //custom middleware
@@ -61,7 +71,7 @@ function validateUserId(req, res, next) {
       if (!user) {
         res.status(404).json({ message: "No user with that ID" })
       } else {
-        console.log(user);
+        console.log("validateUser .getById user", user);
         req.user = user;
         next();
       }
