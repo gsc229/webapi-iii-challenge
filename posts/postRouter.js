@@ -20,9 +20,9 @@ router.put('/:id', (req, res) => {
 });
 
 // custom middleware
+// MOVED TO API VALIDATION MIDDLEWARE
+/* function validatePostId(req, res, next) {
 
-function validatePostId(req, res, next) {
-
-};
+}; */
 
 module.exports = router;
